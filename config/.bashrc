@@ -1,0 +1,11 @@
+source ${VIRTUALENV_PATH}/bin/activate
+echo ""
+echo "-----------------------------------------"
+echo "Welcome to CrossPyInstall (a python .."
+echo "-----------------------------------------"
+echo ""
+echo "- User $(whoami) [$(id -u $USER)] | Group: $(id -g -n) [$(id -g)]"
+echo "- HOME:               ${HOME}"
+echo "- WORKDIR:            ${WORKDIR}"
+echo "- Python Environment: ${VIRTUALENV_PATH}"
+echo ""
