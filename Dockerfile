@@ -28,6 +28,7 @@ ENV WORKDIR=/workspace
 RUN apt-get update && \
     apt-get install -y \
     texlive-full
+
 # Remaining dependencies
 RUN apt-get update && \
     apt-get install -y \

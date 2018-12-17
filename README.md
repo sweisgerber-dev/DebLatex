@@ -1,14 +1,13 @@
-# AOSP Build Environment
+# DebLatex
 
-- [DockerHub](https://hub.docker.com/r/sweisgerber/XXXX)
+- [DockerHub](https://hub.docker.com/r/sweisgerber/deblatex)
 - [Build & Usage Guide](build-instructions.md)
-
 
 ## Support 
 
 > Currently supported versions:
 
-- Python 3.6
+- XXXX
 
 ## Used Ressource
 
