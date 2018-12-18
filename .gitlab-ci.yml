@@ -18,6 +18,7 @@ variables:
   CONTAINER_TEST_IMAGE:    ${DOCKER_IMAGE_NAME}:$CI_BUILD_REF_NAME
   CONTAINER_RELEASE_IMAGE: ${DOCKER_IMAGE_NAME}:latest
 
+
 before_script:
   - docker info
   - docker login -u gitlab-ci-token -p ${CI_BUILD_TOKEN} ${DOCKER_REGISTRY}
