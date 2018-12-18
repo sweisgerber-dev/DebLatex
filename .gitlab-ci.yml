@@ -1,4 +1,6 @@
-image: docker:stable
+image: docker:git
+services:
+- docker:dind
 
 #
 # https://about.gitlab.com/2016/05/23/gitlab-container-registry/
