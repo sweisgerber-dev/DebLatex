@@ -1,9 +1,10 @@
-image: docker:git
+image: docker:stable
+
 services:
 - docker:dind
-
 #
-# https://about.gitlab.com/2016/05/23/gitlab-container-registry/
+# - https://docs.gitlab.com/ee/ci/docker/using_docker_build.html
+# - https://about.gitlab.com/2016/05/23/gitlab-container-registry/
 #
 
 stages:
@@ -16,6 +17,7 @@ variables:
   CONTAINER_RELEASE_IMAGE: ${DOCKER_IMAGE_NAME}:latest
 
 before_script:
+  - docker info
   - docker login -u gitlab-ci-token -p ${CI_BUILD_TOKEN} ${DOCKER_REGISTRY}
 
 build:
