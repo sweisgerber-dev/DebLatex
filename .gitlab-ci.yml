@@ -1,0 +1,23 @@
+image: docker:stable
+
+#
+# https://about.gitlab.com/2016/05/23/gitlab-container-registry/
+#
+
+stages:
+- build
+
+variables:
+  DOCKER_REGISTRY:         projects.cispa.saarland:5005
+  DOCKER_IMAGE_NAME:       projects.cispa.saarland:5005/weisgerber/deblatex
+  CONTAINER_TEST_IMAGE:    ${DOCKER_IMAGE_NAME}:$CI_BUILD_REF_NAME
+  CONTAINER_RELEASE_IMAGE: ${DOCKER_IMAGE_NAME}:latest
+
+before_script:
+  - docker login -u gitlab-ci-token -p ${CI_BUILD_TOKEN} ${DOCKER_REGISTRY}
+
+build:
+  stage: build
+  script:
+    - docker build -t ${CONTAINER_RELEASE_IMAGE} .
+    - docker push ${CONTAINER_RELEASE_IMAGE}
