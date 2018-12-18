@@ -1,14 +1,18 @@
 # DebLatex
 
 - [DockerHub](https://hub.docker.com/r/sweisgerber/deblatex)
-- [Build & Usage Guide](build-instructions.md)
+- [Manual Build & Usage Guide](build-instructions.md)
 
-## Support 
+# Usage
 
-> Currently supported versions:
+## Usage via Dockerhub 
 
-- XXXX
+```
+docker pull sweisgerber/deblatex:latest
+```
 
-## Used Ressource
+## Usage via local registry
 
-- XXXX
+```
+docker pull projects.cispa.saarland:5005/weisgerber/deblatex:latest
+```
