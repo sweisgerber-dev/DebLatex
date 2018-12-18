@@ -14,7 +14,7 @@ variables:
   DOCKER_DRIVER: overlay2
   #
   DOCKER_REGISTRY:         projects.cispa.saarland:5005
-  DOCKER_IMAGE_NAME:       ${DOCKER_REGISTRY}/weisgerber/deblatex
+  DOCKER_IMAGE_NAME:       projects.cispa.saarland:5005/weisgerber/deblatex
   CONTAINER_TEST_IMAGE:    ${DOCKER_IMAGE_NAME}:$CI_BUILD_REF_NAME
   CONTAINER_RELEASE_IMAGE: ${DOCKER_IMAGE_NAME}:latest
 
