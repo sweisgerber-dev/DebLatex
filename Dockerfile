@@ -32,9 +32,9 @@ RUN apt-get update && \
 # Remaining dependencies
 RUN apt-get update && \
     apt-get install -y \
+    gosu \
     make \
-    rubber \
-    gosu
+    rubber
 
 # Create a non-root user that will perform the actual build
 # RUN id ${USER} 2>/dev/null || addgroup -S latex && adduser -S latex -G latex useradd --uid ${USER_ID_DEFAULT} --create-home --shell /bin/bash ${USER}
