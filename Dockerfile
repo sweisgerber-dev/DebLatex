@@ -30,7 +30,8 @@ RUN apt-get update && \
     texlive-full \
     texlive-lang-english \
     texlive-lang-german \
-    texlive-latex-extra
+    texlive-latex-extra \
+&& rm -rf /var/lib/apt/lists/*
 
 # Remaining dependencies
 RUN apt-get update && \
@@ -40,7 +41,8 @@ RUN apt-get update && \
     gosu \
     make \
     python-pygments \
-    rubber
+    rubber \
+&& rm -rf /var/lib/apt/lists/*
 
 # Create a non-root user that will perform the actual build
 # RUN id ${USER} 2>/dev/null || addgroup -S latex && adduser -S latex -G latex useradd --uid ${USER_ID_DEFAULT} --create-home --shell /bin/bash ${USER}
