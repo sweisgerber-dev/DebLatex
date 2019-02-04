@@ -45,7 +45,6 @@ RUN echo "${USER} ALL=(ALL) NOPASSWD: ALL" | tee -a /etc/sudoers
 RUN mkdir ${WORKDIR}; \
     chown ${USER}:${USER} ${WORKDIR};
 
-
 COPY config/.bashrc /home/${USER}/.bashrc
 RUN chown ${USER}:${USER} /home/${USER}/.bashrc
 
@@ -55,5 +54,5 @@ COPY config/entrypoint.sh /usr/local/bin/entrypoint.sh
 VOLUME ["/workspace"]
 WORKDIR ${WORKDIR}
 
-ENTRYPOINT "/usr/local/bin/entrypoint.sh"
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["/bin/bash"]

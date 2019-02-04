@@ -1,4 +1,3 @@
-source ${VIRTUALENV_PATH}/bin/activate
 echo ""
 echo "-----------------------------------------"
 echo "Welcome to DebLatex."
