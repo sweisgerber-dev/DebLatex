@@ -50,7 +50,7 @@ RUN apt-get update && \
 RUN id ${USER} 2>/dev/null || useradd --uid ${USER_ID_DEFAULT} --create-home --shell /bin/bash ${USER}
 RUN echo "${USER} ALL=(ALL) NOPASSWD: ALL" | tee -a /etc/sudoers
 
-RUN mkdir ${WORKDIR}; \
+RUN mkdir -p ${WORKDIR}; \
     chown ${USER}:${USER} ${WORKDIR};
 
 COPY config/.bashrc /home/${USER}/.bashrc
