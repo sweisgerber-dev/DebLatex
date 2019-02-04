@@ -1,8 +1,7 @@
 # ===========================================================================================
-# Dockerfile for building AOSP [Android Open Source Project]
 #
-# References:
-#       http://source.android.com/source/index.html
+# Dockerfile for compiling latex documents
+#
 # ===========================================================================================
 FROM debian:stretch-slim
 
@@ -27,13 +26,20 @@ ENV WORKDIR=/workspace
 # Install dependencies first texlive, it takes forever
 RUN apt-get update && \
     apt-get install -y \
-    texlive-full
+    texlive-bibtex-extra \
+    texlive-full \
+    texlive-lang-english \
+    texlive-lang-german \
+    texlive-latex-extra
 
 # Remaining dependencies
 RUN apt-get update && \
     apt-get install -y \
+    biber \
+    fonts-freefont-otf \
     gosu \
     make \
+    python-pygments \
     rubber
 
 # Create a non-root user that will perform the actual build

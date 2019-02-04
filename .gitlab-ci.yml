@@ -26,5 +26,7 @@ before_script:
 build:
   stage: build
   script:
-    - docker build -t ${CONTAINER_RELEASE_IMAGE} .
+    - docker pull ${DOCKER_IMAGE_NAME}:latest || true
+    - docker build --cache-from ${DOCKER_IMAGE_NAME}:latest --tag ${DOCKER_IMAGE_NAME}:$CI_COMMIT_SHA --tag ${CONTAINER_RELEASE_IMAGE} .
+    - docker push ${DOCKER_IMAGE_NAME}:$CI_COMMIT_SHA
     - docker push ${CONTAINER_RELEASE_IMAGE}
