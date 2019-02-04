@@ -55,5 +55,5 @@ COPY config/entrypoint.sh /usr/local/bin/entrypoint.sh
 VOLUME ["/workspace"]
 WORKDIR ${WORKDIR}
 
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+ENTRYPOINT "/usr/local/bin/entrypoint.sh"
 CMD ["/bin/bash"]
