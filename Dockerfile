@@ -3,7 +3,7 @@
 # Dockerfile for compiling latex documents
 #
 # ===========================================================================================
-FROM debian:stretch-slim
+FROM debian:buster-slim
 
 MAINTAINER Sebastian Weisgerber <sweisgerber.dev@gmail.com>
 

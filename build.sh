@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-docker build -t deblatex:latest .
+docker build -t deblatex:testing .
