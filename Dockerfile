@@ -39,6 +39,7 @@ RUN apt-get update && \
     biber \
     fonts-freefont-otf \
     gosu \
+    git \
     make \
     python-pygments \
     rubber \
