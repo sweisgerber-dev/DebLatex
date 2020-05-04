@@ -41,6 +41,9 @@ RUN apt-get update && \
     gosu \
     git \
     make \
+    python3 \
+    python3-virtualenv \
+    python3-pip \
     python-pygments \
     rubber \
 && rm -rf /var/lib/apt/lists/*
