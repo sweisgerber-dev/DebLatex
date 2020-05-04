@@ -42,6 +42,7 @@ RUN apt-get update && \
     git \
     make \
     python3 \
+    python3-venv \
     python3-virtualenv \
     python3-pip \
     python-pygments \
