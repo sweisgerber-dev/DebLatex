@@ -3,7 +3,7 @@
 # Dockerfile for compiling latex documents
 #
 # ===========================================================================================
-FROM debian:stretch-slim
+FROM debian:bullseye-slim
 
 MAINTAINER Sebastian Weisgerber <sweisgerber.dev@gmail.com>
 
@@ -39,8 +39,13 @@ RUN apt-get update && \
     biber \
     fonts-freefont-otf \
     gosu \
+    git \
     make \
-    python-pygments \
+    python3 \
+    python3-pip \
+    python3-pygments \
+    python3-venv \
+    python3-virtualenv \
     rubber \
 && rm -rf /var/lib/apt/lists/*
 

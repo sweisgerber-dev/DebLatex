@@ -15,9 +15,9 @@ variables:
   #
   DOCKER_REGISTRY:         projects.cispa.saarland:5005
   DOCKER_IMAGE_NAME:       projects.cispa.saarland:5005/weisgerber/deblatex
+  DOCKER_IMAGE_TAG:        bullseye
   CONTAINER_TEST_IMAGE:    ${DOCKER_IMAGE_NAME}:$CI_BUILD_REF_NAME
-  CONTAINER_RELEASE_IMAGE: ${DOCKER_IMAGE_NAME}:stretch
-
+  CONTAINER_RELEASE_IMAGE: ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
 
 before_script:
   - docker info
@@ -26,7 +26,8 @@ before_script:
 build:
   stage: build
   script:
-    - docker pull ${DOCKER_IMAGE_NAME}:stretch || true
-    - docker build --cache-from ${DOCKER_IMAGE_NAME}:stretch --tag ${DOCKER_IMAGE_NAME}:$CI_COMMIT_SHA --tag ${CONTAINER_RELEASE_IMAGE} .
+    - docker pull ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} || true
+    - docker build --cache-from ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} --tag ${DOCKER_IMAGE_NAME}:$CI_COMMIT_SHA --tag ${CONTAINER_RELEASE_IMAGE} --tag ${DOCKER_IMAGE_NAME}:latest .
     - docker push ${DOCKER_IMAGE_NAME}:$CI_COMMIT_SHA
+    - docker push ${DOCKER_IMAGE_NAME}:latest
     - docker push ${CONTAINER_RELEASE_IMAGE}
