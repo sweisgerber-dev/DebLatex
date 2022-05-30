@@ -9,7 +9,7 @@
 or
 
 ```
-docker build -t deblatex:latest .
+docker build -t deblatex:stretch .
 ```
 
 ## Run
@@ -20,5 +20,5 @@ docker run -ti \
     --volume /PATH/ON/HOST:/workspace \
     -e LOCAL_USER_ID=`id -u $USER` \
     -e LOCAL_GROUP_ID=`id -g $USER` \
-    deblatex:latest
+    deblatex:stretch
 ```
