@@ -9,7 +9,7 @@
 or
 
 ```
-docker build -t deblatex:testing .
+docker build -t deblatex:buster .
 ```
 
 ## Run
@@ -20,5 +20,5 @@ docker run -ti \
     --volume /PATH/ON/HOST:/workspace \
     -e LOCAL_USER_ID=`id -u $USER` \
     -e LOCAL_GROUP_ID=`id -g $USER` \
-    deblatex:testing
+    deblatex:buster
 ```
