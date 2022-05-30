@@ -15,7 +15,7 @@ variables:
   #
   DOCKER_REGISTRY:         projects.cispa.saarland:5005
   DOCKER_IMAGE_NAME:       projects.cispa.saarland:5005/weisgerber/deblatex
-  DOCKER_IMAGE_TAG:        testing
+  DOCKER_IMAGE_TAG:        bullseye
   CONTAINER_TEST_IMAGE:    ${DOCKER_IMAGE_NAME}:$CI_BUILD_REF_NAME
   CONTAINER_RELEASE_IMAGE: ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
 

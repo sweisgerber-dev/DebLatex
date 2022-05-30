@@ -8,11 +8,11 @@
 ## Usage via Dockerhub 
 
 ```
-docker pull sweisgerber/deblatex:testing
+docker pull sweisgerber/deblatex:bullseye
 ```
 
 ## Usage via local registry
 
 ```
-docker pull projects.cispa.saarland:5005/weisgerber/deblatex:testing
+docker pull projects.cispa.saarland:5005/weisgerber/deblatex:bullseye
 ```

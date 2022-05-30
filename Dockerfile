@@ -3,7 +3,7 @@
 # Dockerfile for compiling latex documents
 #
 # ===========================================================================================
-FROM debian:buster-slim
+FROM debian:bullseye-slim
 
 MAINTAINER Sebastian Weisgerber <sweisgerber.dev@gmail.com>
 
@@ -42,11 +42,10 @@ RUN apt-get update && \
     git \
     make \
     python3 \
+    python3-pip \
     python3-pygments \
     python3-venv \
     python3-virtualenv \
-    python3-pip \
-    python-pygments \
     rubber \
 && rm -rf /var/lib/apt/lists/*
 
