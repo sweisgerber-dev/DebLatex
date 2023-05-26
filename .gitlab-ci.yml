@@ -13,8 +13,8 @@ stages:
 variables:
   DOCKER_DRIVER: overlay2
   #
-  DOCKER_REGISTRY:         projects.cispa.saarland:5005
-  DOCKER_IMAGE_NAME:       projects.cispa.saarland:5005/weisgerber/deblatex
+  # DOCKER_REGISTRY:         projects.cispa.saarland:5005
+  DOCKER_IMAGE_NAME:       $CI_REGISTRY_IMAGE
   DOCKER_IMAGE_TAG:        bullseye
   CONTAINER_TEST_IMAGE:    ${DOCKER_IMAGE_NAME}:$CI_BUILD_REF_NAME
   CONTAINER_RELEASE_IMAGE: ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
@@ -22,6 +22,7 @@ variables:
 before_script:
   - docker info
   - docker login -u gitlab-ci-token -p ${CI_BUILD_TOKEN} ${DOCKER_REGISTRY}
+  - echo -n ${CI_JOB_TOKEN} | docker login -u ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
 
 build:
   stage: build
