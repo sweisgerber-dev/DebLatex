@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-docker build -t deblatex:bullseye .
+docker build -t deblatex:bookworm .
