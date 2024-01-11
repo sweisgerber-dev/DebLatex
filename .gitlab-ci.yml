@@ -1,33 +1,39 @@
-image: docker:stable
-
-services:
-- docker:dind
-#
-# - https://docs.gitlab.com/ee/ci/docker/using_docker_build.html
-# - https://about.gitlab.com/2016/05/23/gitlab-container-registry/
-#
+default:
+  image: docker:24.0.5
+  services:
+    - docker:24.0.5-dind
+  before_script:
+    - docker info
+    - echo -n ${CI_JOB_TOKEN} | docker login -u ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
 
 stages:
 - build
 
 variables:
   DOCKER_DRIVER: overlay2
-  #
-  # DOCKER_REGISTRY:         projects.cispa.saarland:5005
-  DOCKER_IMAGE_NAME:       $CI_REGISTRY_IMAGE
-  DOCKER_IMAGE_TAG:        bookworm
-  CONTAINER_TEST_IMAGE:    ${DOCKER_IMAGE_NAME}:$CI_BUILD_REF_NAME
-  CONTAINER_RELEASE_IMAGE: ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
 
-before_script:
-  - docker info
-  - echo -n ${CI_JOB_TOKEN} | docker login -u ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
-
-build:
+build-stable:
   stage: build
+  variables:
+      DOCKER_IMAGE_NAME: $CI_REGISTRY_IMAGE
+      DOCKER_IMAGE_TAG:  bookworm
   script:
     - docker pull ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} || true
-    - docker build --cache-from ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} --tag ${DOCKER_IMAGE_NAME}:$CI_COMMIT_SHA --tag ${CONTAINER_RELEASE_IMAGE} --tag ${DOCKER_IMAGE_NAME}:latest .
+    - docker buildx --cache-from ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} --platform linux/amd64 --build-arg=DEBIAN_RELEASE=${_DEBIAN_RELEASE}-slim .
     - docker push ${DOCKER_IMAGE_NAME}:$CI_COMMIT_SHA
     - docker push ${DOCKER_IMAGE_NAME}:latest
+    - docker push ${DOCKER_IMAGE_NAME}:stable
     - docker push ${CONTAINER_RELEASE_IMAGE}
+
+build-oldstable:
+  stage: build
+  variables:
+      DOCKER_IMAGE_NAME: $CI_REGISTRY_IMAGE
+      DOCKER_IMAGE_TAG:  bullseye
+  script:
+    - docker pull ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} || true
+    - docker build --cache-from ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} --platform linux/arm64/v8,linux/amd64 --build-arg=DEBIAN_RELEASE=${_DEBIAN_RELEASE}-slim .
+    - docker push ${DOCKER_IMAGE_NAME}:$CI_COMMIT_SHA
+    - docker push ${DOCKER_IMAGE_NAME}:oldstable
+    - docker push ${CONTAINER_RELEASE_IMAGE}
+

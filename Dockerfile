@@ -3,7 +3,8 @@
 # Dockerfile for compiling latex documents
 #
 # ===========================================================================================
-FROM debian:bookworm-slim
+ARG DEBIAN_RELEASE=bookworm-slim
+FROM debian:${DEBIAN_RELEASE}
 
 LABEL org.opencontainers.image.authors="it@cǐspa.de"
 
