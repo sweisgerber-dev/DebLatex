@@ -19,7 +19,7 @@ build-stable:
       DOCKER_IMAGE_TAG:  bookworm
   script:
     - docker pull ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} || true
-    - docker buildx --cache-from ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} --platform linux/amd64 --build-arg=DEBIAN_RELEASE=${DOCKER_IMAGE_TAG}-slim .
+    - docker buildx build --cache-from ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} --platform linux/amd64 --build-arg=DEBIAN_RELEASE=${DOCKER_IMAGE_TAG}-slim .
     - docker push ${DOCKER_IMAGE_NAME}:$CI_COMMIT_SHA
     - docker push ${DOCKER_IMAGE_NAME}:latest
     - docker push ${DOCKER_IMAGE_NAME}:stable
@@ -32,7 +32,7 @@ build-oldstable:
       DOCKER_IMAGE_TAG:  bullseye
   script:
     - docker pull ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} || true
-    - docker buildx --cache-from ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} --platform linux/arm64/v8,linux/amd64 --build-arg=DEBIAN_RELEASE=${DOCKER_IMAGE_TAG}-slim .
+    - docker buildx build --cache-from ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} --platform linux/arm64/v8,linux/amd64 --build-arg=DEBIAN_RELEASE=${DOCKER_IMAGE_TAG}-slim .
     - docker push ${DOCKER_IMAGE_NAME}:$CI_COMMIT_SHA
     - docker push ${DOCKER_IMAGE_NAME}:oldstable
     - docker push ${CONTAINER_RELEASE_IMAGE}
