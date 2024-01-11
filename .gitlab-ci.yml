@@ -6,7 +6,7 @@ default:
     - docker info
     - echo -n ${CI_JOB_TOKEN} | docker login -u ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
     - docker context create general
-    - docker buildx create genral --use
+    - docker buildx create general --use
 
 stages:
 - build
