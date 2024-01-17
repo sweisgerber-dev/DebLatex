@@ -1,33 +1,81 @@
-image: docker:stable
-
-services:
-- docker:dind
-#
-# - https://docs.gitlab.com/ee/ci/docker/using_docker_build.html
-# - https://about.gitlab.com/2016/05/23/gitlab-container-registry/
-#
+default:
+  image: docker:24.0.5
+  services:
+    - docker:24.0.5-dind
+  before_script:
+    - echo -n ${CI_JOB_TOKEN} | docker login -u ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
+    - docker info
+    - docker context create multi-arch
+        --description "MultiArch Environment Gitlab dind" 
+        --docker "host=${DOCKER_HOST},ca=${DOCKER_TLS_CERTDIR}/client/ca.pem,cert=${DOCKER_TLS_CERTDIR}/client/cert.pem,key=${DOCKER_TLS_CERTDIR}/client/key.pem"
+    - docker context ls 
+    - docker context use multi-arch
+    # - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+    - docker buildx create --use --platform=linux/arm64,linux/amd64 --name multi-platform-builder multi-arch
+    - docker buildx inspect --bootstrap
+    - docker buildx ls
 
 stages:
 - build
 
 variables:
   DOCKER_DRIVER: overlay2
-  #
-  # DOCKER_REGISTRY:         projects.cispa.saarland:5005
-  DOCKER_IMAGE_NAME:       $CI_REGISTRY_IMAGE
-  DOCKER_IMAGE_TAG:        bullseye
-  CONTAINER_TEST_IMAGE:    ${DOCKER_IMAGE_NAME}:$CI_BUILD_REF_NAME
-  CONTAINER_RELEASE_IMAGE: ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
+  DOCKER_HOST: tcp://docker:2376
+  DOCKER_TLS_CERTDIR: "/certs"
+  DOCKER_TLS_VERIFY: 1
+  DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
+  DOCKER_IMAGE_NAME: $CI_REGISTRY_IMAGE
 
-before_script:
-  - docker info
-  - echo -n ${CI_JOB_TOKEN} | docker login -u ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
+.default_rules:
+  rules:
+    # - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
-build:
+build-stable:
   stage: build
+  tags:
+    - docker
+  rules:
+    - !reference [.default_rules, rules]
+  variables:
+      DOCKER_IMAGE_NAME: $CI_REGISTRY_IMAGE
+      DOCKER_IMAGE_TAG:  bookworm
   script:
+    # Invalid tag: missing manifest digest
+    #   - https://forum.gitlab.com/t/digest-not-applicable-after-push-buildx-image-after-gitlab-upgrade-15-3-15-8/80673/2
+    #   - https://gitlab.com/gitlab-org/gitlab/-/issues/389577
+    #   - https://github.com/docker/buildx/issues/1509
     - docker pull ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} || true
-    - docker build --cache-from ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} --tag ${DOCKER_IMAGE_NAME}:$CI_COMMIT_SHA --tag ${CONTAINER_RELEASE_IMAGE} --tag ${DOCKER_IMAGE_NAME}:latest .
-    - docker push ${DOCKER_IMAGE_NAME}:$CI_COMMIT_SHA
-    - docker push ${DOCKER_IMAGE_NAME}:latest
-    - docker push ${CONTAINER_RELEASE_IMAGE}
+    - docker buildx build
+        --cache-from ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
+        --tag ${DOCKER_IMAGE_NAME}:stable
+        --tag ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
+        --tag ${DOCKER_IMAGE_NAME}:latest
+        --push
+        --provenance false
+        --platform linux/arm64/v8,linux/amd64
+        --build-arg=DEBIAN_RELEASE=${DOCKER_IMAGE_TAG}-slim .
+
+build-oldstable:
+  stage: build
+  tags:
+    - docker
+  rules:
+    - !reference [.default_rules, rules]
+  variables:
+      DOCKER_IMAGE_NAME: $CI_REGISTRY_IMAGE
+      DOCKER_IMAGE_TAG:  bullseye
+  script:
+    # Invalid tag: missing manifest digest
+    #   - https://forum.gitlab.com/t/digest-not-applicable-after-push-buildx-image-after-gitlab-upgrade-15-3-15-8/80673/2
+    #   - https://gitlab.com/gitlab-org/gitlab/-/issues/389577
+    #   - https://github.com/docker/buildx/issues/1509
+    - docker pull ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} || true
+    - docker buildx build
+        --cache-from ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
+        --tag ${DOCKER_IMAGE_NAME}:oldstable
+        --tag ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
+        --push
+        --provenance false
+        --platform linux/arm64/v8,linux/amd64
+        --build-arg=DEBIAN_RELEASE=${DOCKER_IMAGE_TAG}-slim .
